@@ -1,9 +1,11 @@
 package com.example.services;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.example.domain.Todo;
 
@@ -26,11 +28,31 @@ public class TodoService {
         return todos;
     }
 
+    public Todo save(Todo todo) {
+
+        if (todo.getId().equals("-1")) {
+
+            int tId = todos.stream().map((t) -> {
+                return Integer.parseInt(t.getId());
+            }).max((i1, i2) -> i1.compareTo(i2)).get() + 1;
+
+            todo.setId(tId + "");
+            todos.add(todo);
+
+        } else {
+
+            deleteById(todo.getId());
+
+            todos.add(todo);
+        }
+        return todo;
+    }
+
     public Todo deleteById(String id) {
         Optional<Todo> todo = findById(id);
 
         if (!todo.isPresent()) {
-            System.out.println(todo);
+
             return null;
         }
 
