@@ -2,10 +2,14 @@ package com.example.domain;
 
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "todo")
 public class Todo {
+
+    @Id
     private String id;
     private String username;
     private String description;
@@ -16,6 +20,7 @@ public class Todo {
 
     }
 
+    @PersistenceConstructor
     public Todo(String id, String username, String description, Date targetDate, boolean isDone) {
         this.id = id;
         this.username = username;

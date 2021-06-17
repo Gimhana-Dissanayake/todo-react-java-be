@@ -1,18 +1,23 @@
 package com.example.services;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.example.domain.Todo;
+import com.example.repository.TodoRepository;
 
 import org.springframework.stereotype.Service;
 
 @Service
 public class TodoService {
+
+    private TodoRepository todoRepository;
+
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
 
     private static List<Todo> todos = new ArrayList<Todo>();
 
@@ -25,49 +30,37 @@ public class TodoService {
     }
 
     public List<Todo> findAll() {
-        return todos;
+        return todoRepository.findAll();
     }
 
     public Todo save(Todo todo) {
 
         if (todo.getId().equals("-1")) {
+            todo.setId(null);
 
-            int tId = todos.stream().map((t) -> {
-                return Integer.parseInt(t.getId());
-            }).max((i1, i2) -> i1.compareTo(i2)).get() + 1;
-
-            todo.setId(tId + "");
-            todos.add(todo);
-
+            return todoRepository.save(todo);
         } else {
-
-            deleteById(todo.getId());
-
-            todos.add(todo);
+            return todoRepository.save(todo);
         }
-        return todo;
+
     }
 
     public Todo deleteById(String id) {
-        Optional<Todo> todo = findById(id);
 
-        if (!todo.isPresent()) {
+        Optional<Todo> todo = todoRepository.findById(id);
 
+        if (todo.isPresent()) {
+            todoRepository.deleteById(id);
+            return todo.get();
+        } else {
             return null;
         }
-
-        if (todos.remove(todo.get())) {
-
-            return todo.get();
-        }
-
-        return null;
 
     }
 
     public Optional<Todo> findById(String id) {
 
-        return todos.stream().filter((td) -> (td.getId().equals(id))).findFirst();
+        return todoRepository.findById(id);
 
     }
 
