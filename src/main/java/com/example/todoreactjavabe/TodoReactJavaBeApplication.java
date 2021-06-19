@@ -11,6 +11,14 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class TodoReactJavaBeApplication {
 
 	public static void main(String[] args) {
+
+		// BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+		// for (int i = 1; i <= 10; i++) {
+		// 	String encodedString = encoder.encode("zoom50");
+		// 	System.out.println(encodedString);
+		// }
+
 		SpringApplication.run(TodoReactJavaBeApplication.class, args);
 	}
 
